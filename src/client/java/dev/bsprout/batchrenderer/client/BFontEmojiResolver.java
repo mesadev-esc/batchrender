@@ -1,9 +1,9 @@
-package dev.bsprout.brapi.client;
+package dev.bsprout.batchrenderer.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTexture;
-import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.textures.TextureFormat;
+import com.mojang.renderpearl.api.textures.GpuTexture;
+import com.mojang.renderpearl.api.textures.GpuTextureView;
+import com.mojang.renderpearl.api.GpuFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import org.lwjgl.system.MemoryUtil;
@@ -24,10 +24,6 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-/**
- * Resolves emoji codepoints to GPU textures for BFont.
-**/
 
 public class BFontEmojiResolver {
     private static Logger logger = BTexture.getLogger();
@@ -58,9 +54,12 @@ public class BFontEmojiResolver {
         volatile GpuHandle fallback;
     }
 
+    private volatile boolean closed;
+
     private final ConcurrentMap<Integer, Entry> cache = new ConcurrentHashMap<>();
 
     public GpuTextureView getEmojiTextureView(int codePoint) {
+        if (closed) return null;
         Entry entry = cache.computeIfAbsent(codePoint, this::startResolving);
         GpuHandle handle = entry.real != null ? entry.real : entry.fallback;
         return handle != null ? handle.view() : null;
@@ -94,11 +93,9 @@ public class BFontEmojiResolver {
         return entry;
     }
 
-    // Resource pack override
-
     private static GpuHandle tryLoadResourcePack(int codePoint) {
         String hex = String.format("%04x", codePoint);
-        var path = Identifier.fromNamespaceAndPath("brapi", "textures/font/emoji/" + hex + ".png");
+        var path = Identifier.fromNamespaceAndPath("batchrenderer", "textures/font/emoji/" + hex + ".png");
 
         var resourceOpt = Minecraft.getInstance().getResourceManager().getResource(path);
         if (resourceOpt.isEmpty()) return null;
@@ -114,12 +111,10 @@ public class BFontEmojiResolver {
         }
     }
 
-    // Try to load from disk
     private static GpuHandle tryLoadDiskCache(int codePoint) {
         String hex = Integer.toHexString(codePoint).toLowerCase();
         Path emojiPath = cacheDir().resolve(hex + ".png");
         if (!Files.exists(emojiPath)) return null;
-
 
         logger.info("[EmojiResolver] " + hex + " found in disk cache, using that instead of Twemoji");
         try (InputStream in = Files.newInputStream(emojiPath)) {
@@ -135,10 +130,9 @@ public class BFontEmojiResolver {
     }
 
     private static Path cacheDir() {
-        return Minecraft.getInstance().gameDirectory.toPath().resolve(".brapi/emoji_cache");
+        return Minecraft.getInstance().gameDirectory.toPath().resolve(".batchrenderer/emoji_cache");
     }
 
-    // System font placeholder
     private static GpuHandle tryRasterizeSystemFont(int codePoint) {
         Font emojiFont = getSystemEmojiFont();
         if (emojiFont == null || !emojiFont.canDisplay(codePoint)) return null;
@@ -177,7 +171,6 @@ public class BFontEmojiResolver {
         return null;
     }
 
-    // Twemoji fetch
     private void fetchTwemojiAsync(int codePoint, Entry entry) {
         String hex = Integer.toHexString(codePoint).toLowerCase();
         Path emojiPath = cacheDir().resolve(hex + ".png");
@@ -206,6 +199,7 @@ public class BFontEmojiResolver {
                 logger.info("[EmojiResolver] SUCCESSFULLY Downloaded and saved emoji!");
 
                 Minecraft.getInstance().execute(() -> {
+                    if (closed) return;
                     try (InputStream in = Files.newInputStream(emojiPath)) {
                         BufferedImage img = ImageIO.read(in);
                         if (img == null) {
@@ -254,12 +248,12 @@ public class BFontEmojiResolver {
             GpuTexture texture = RenderSystem.getDevice().createTexture(
                     debugName,
                     GpuTexture.USAGE_TEXTURE_BINDING | GpuTexture.USAGE_COPY_DST,
-                    TextureFormat.RGBA8,
+                    GpuFormat.RGBA8_UNORM,
                     w, h, 1, 1
             );
 
             RenderSystem.getDevice().createCommandEncoder()
-                    .writeToTexture(texture, buffer, com.mojang.blaze3d.platform.NativeImage.Format.RGBA,
+                    .writeToTexture(texture, buffer,
                             0, 0, 0, 0, w, h);
 
             GpuTextureView view = RenderSystem.getDevice().createTextureView(texture);
@@ -270,6 +264,7 @@ public class BFontEmojiResolver {
     }
 
     public void close() {
+        closed = true;
         for (Entry entry : cache.values()) {
             if (entry.real != null) entry.real.close();
             if (entry.fallback != null) entry.fallback.close();

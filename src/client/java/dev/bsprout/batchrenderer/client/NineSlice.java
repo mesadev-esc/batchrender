@@ -1,4 +1,4 @@
-package dev.bsprout.brapi.client;
+package dev.bsprout.batchrenderer.client;
 
 public record NineSlice(
         BTexture texture,

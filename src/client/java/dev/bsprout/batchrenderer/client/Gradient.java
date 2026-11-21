@@ -1,4 +1,4 @@
-package dev.bsprout.brapi.client;
+package dev.bsprout.batchrenderer.client;
 
 public class Gradient {
     public final int[] colors;
@@ -7,7 +7,6 @@ public class Gradient {
         this.colors = colors;
     }
 
-    // Sample the gradient at t (0.0 - 1.0)
     public int sample(float t) {
         if (colors.length == 1) return colors[0];
         float scaled = t * (colors.length - 1);

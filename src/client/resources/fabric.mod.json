@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "batchrenderer",
+  "version": "${version}",
+  "name": "Batchrenderer",
+  "description": "A Vulkan UI batch and layer renderer with rounded rectangles, gradients, textures and SDF text.",
+  "authors": [
+    "BSprout"
+  ],
+  "contact": {
+    "sources": "https://github.com/mesadev-esc/batchrender"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/batchrenderer/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.bsprout.batchrenderer.client.Batchrenderer"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "batchrenderer.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "~26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

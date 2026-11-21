@@ -1,10 +1,9 @@
-package dev.bsprout.brapi.client;
+package dev.bsprout.batchrenderer.client;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTexture;
-import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.textures.TextureFormat;
+import com.mojang.renderpearl.api.textures.GpuTexture;
+import com.mojang.renderpearl.api.textures.GpuTextureView;
+import com.mojang.renderpearl.api.GpuFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
@@ -88,13 +87,13 @@ public class BFont {
             atlasTexture = RenderSystem.getDevice().createTexture(
                     "BFont SDF atlas",
                     GpuTexture.USAGE_TEXTURE_BINDING | GpuTexture.USAGE_COPY_DST,
-                    TextureFormat.RED8,
+                    GpuFormat.R8_UNORM,
                     ATLAS_SIZE, ATLAS_SIZE, 1, 1
             );
             ByteBuffer blank = MemoryUtil.memCalloc(ATLAS_SIZE * ATLAS_SIZE);
             try {
                 RenderSystem.getDevice().createCommandEncoder()
-                        .writeToTexture(atlasTexture, blank, NativeImage.Format.LUMINANCE,
+                        .writeToTexture(atlasTexture, blank,
                                 0, 0, 0, 0, ATLAS_SIZE, ATLAS_SIZE);
             } finally {
                 MemoryUtil.memFree(blank);
@@ -176,7 +175,7 @@ public class BFont {
         }
 
         RenderSystem.getDevice().createCommandEncoder()
-                .writeToTexture(atlasTexture, sdf, NativeImage.Format.LUMINANCE,
+                .writeToTexture(atlasTexture, sdf,
                         0, 0, penX, penY, w[0], h[0]);
 
         float u0 = (float) penX / ATLAS_SIZE;
@@ -377,10 +376,10 @@ public class BFont {
 
     public void close() {
         if (emojiResolver != null) emojiResolver.close();
-        atlasView.close();
-        atlasTexture.close();
-        if (fontInfo != null) fontInfo.free();
-        if (ttfBuf != null) MemoryUtil.memFree(ttfBuf);
+        if (atlasView != null) { atlasView.close(); atlasView = null; }
+        if (atlasTexture != null) { atlasTexture.close(); atlasTexture = null; }
+        if (fontInfo != null) { fontInfo.free(); fontInfo = null; }
+        if (ttfBuf != null) { MemoryUtil.memFree(ttfBuf); ttfBuf = null; }
     }
 
     public float getBakeSize(){
