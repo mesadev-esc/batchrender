@@ -12,6 +12,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BindGroupLayouts;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
 public class Batchrenderer implements ClientModInitializer {
     public static final String MOD_ID = "batchrenderer";
