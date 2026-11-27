@@ -1,4 +1,4 @@
-package dev.bsprout.batchrenderer.client;
+package dev.mesa.batchrenderer.client;
 
 import com.mojang.renderpearl.api.buffers.GpuBuffer;
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;

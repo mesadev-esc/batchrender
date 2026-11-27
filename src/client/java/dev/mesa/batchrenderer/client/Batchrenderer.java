@@ -1,10 +1,10 @@
-package dev.bsprout.batchrenderer.client;
+package dev.mesa.batchrenderer.client;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.renderpearl.api.GpuFormat;
 import com.mojang.renderpearl.api.pipeline.*;
 import com.mojang.renderpearl.api.vertex.VertexFormat;
-import dev.bsprout.batchrenderer.client.mixin.RenderPipelinesAccessor;
+import dev.mesa.batchrenderer.client.mixin.RenderPipelinesAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;

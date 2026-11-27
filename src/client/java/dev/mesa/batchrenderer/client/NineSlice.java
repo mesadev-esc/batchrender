@@ -1,4 +1,4 @@
-package dev.bsprout.batchrenderer.client;
+package dev.mesa.batchrenderer.client;
 
 public record NineSlice(
         BTexture texture,

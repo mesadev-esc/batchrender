@@ -1,4 +1,4 @@
-package dev.bsprout.batchrenderer.client;
+package dev.mesa.batchrenderer.client;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;

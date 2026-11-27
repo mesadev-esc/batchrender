@@ -1,4 +1,4 @@
-package dev.bsprout.batchrenderer.client;
+package dev.mesa.batchrenderer.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.renderpearl.api.GpuFormat;

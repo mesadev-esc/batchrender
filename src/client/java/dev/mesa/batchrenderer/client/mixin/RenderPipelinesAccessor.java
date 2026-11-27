@@ -1,4 +1,4 @@
-package dev.bsprout.batchrenderer.client.mixin;
+package dev.mesa.batchrenderer.client.mixin;
 
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import net.minecraft.client.renderer.RenderPipelines;

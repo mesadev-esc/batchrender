@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "id": "batchrenderer",
-  "version": "${version}",
+  "version": "${mod_version}",
   "name": "Batchrenderer",
   "description": "A Vulkan UI batch and layer renderer with rounded rectangles, gradients, textures and SDF text.",
   "authors": [
-    "BSprout"
+    "mesadev"
   ],
   "contact": {
     "sources": "https://github.com/mesadev-esc/batchrender"
@@ -15,7 +15,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "dev.bsprout.batchrenderer.client.Batchrenderer"
+      "dev.mesa.batchrenderer.client.Batchrenderer"
     ]
   },
   "mixins": [

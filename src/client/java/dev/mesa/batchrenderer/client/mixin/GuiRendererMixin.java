@@ -1,6 +1,6 @@
-package dev.bsprout.batchrenderer.client.mixin;
+package dev.mesa.batchrenderer.client.mixin;
 
-import dev.bsprout.batchrenderer.client.BRender;
+import dev.mesa.batchrenderer.client.BRender;
 import net.minecraft.client.gui.render.GuiRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

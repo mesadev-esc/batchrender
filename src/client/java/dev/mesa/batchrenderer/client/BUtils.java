@@ -1,4 +1,4 @@
-package dev.bsprout.batchrenderer.client;
+package dev.mesa.batchrenderer.client;
 
 public class BUtils {
     @Deprecated
